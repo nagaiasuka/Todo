@@ -1,0 +1,22 @@
+{
+  "cli": {
+    "appVersionSource": "remote",
+    "promptToConfigurePushNotifications": false
+  },
+  "build": {
+    "production": {
+      "distribution": "store",
+      "autoIncrement": true
+    }
+  },
+  "submit": {
+    "production": {
+      "ios": {
+        "appleTeamId": "R4A5GXYJC6",
+        "language": "ja",
+        "ascAppId": "6828646484",
+        "appName": "ToDo - ロック画面ウィジェット"
+      }
+    }
+  }
+}

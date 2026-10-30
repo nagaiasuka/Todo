@@ -1,0 +1,8 @@
+{
+  "compilerOptions": {
+    "target": "ES2022", "module": "CommonJS", "moduleResolution": "Node",
+    "strict": true, "esModuleInterop": true, "skipLibCheck": true,
+    "outDir": ".test-build", "rootDir": "src", "ignoreDeprecations": "6.0"
+  },
+  "include": ["src/domain/**/*.ts", "src/data/repository.ts", "src/widgets/model.ts"]
+}

@@ -1,0 +1,45 @@
+{
+  "appId": "6828646484",
+  "version": "1.0.0",
+  "state": "WAITING_FOR_REVIEW",
+  "name": "ToDo - ロック画面ウィジェット",
+  "reviewContactComplete": true,
+  "selectedBuild": {
+    "id": "0f081f03-5a94-4229-a60c-2b044f8ef3f9",
+    "version": "6",
+    "processingState": "VALID"
+  },
+  "territories": [
+    "JPN"
+  ],
+  "price": {
+    "baseTerritory": "JPN",
+    "manualPrices": [
+      "0"
+    ]
+  },
+  "privacyPublished": true,
+  "screenshots": [
+    {
+      "name": "01-lock-screen.png",
+      "state": "COMPLETE"
+    },
+    {
+      "name": "02-home-widget.png",
+      "state": "COMPLETE"
+    },
+    {
+      "name": "03-priorities.png",
+      "state": "COMPLETE"
+    },
+    {
+      "name": "04-reminder.png",
+      "state": "COMPLETE"
+    }
+  ],
+  "reviewSubmission": {
+    "id": "30a61d80-8bf1-4e2e-8fb5-1af7130fe32e",
+    "state": "WAITING_FOR_REVIEW",
+    "submittedDate": "2026-10-30T00:43:48.293Z"
+  }
+}

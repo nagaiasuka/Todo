@@ -1,0 +1,6 @@
+Tool: built-in image_gen
+Asset: icon-cool.png (normalized to 1024 x 1024 for iOS)
+
+Use case: logo-brand
+Asset type: final iOS icon for a minimalist Todo app.
+Primary request: a much cooler, sharper, sophisticated app icon. One full-bleed square opaque near-black graphite canvas (#171A18), with ONE oversized custom-designed electric pale-lime checkmark (#D0E6A5). The checkmark is a strong architectural graphic, precise angular cut ends, two bold joined diagonal strokes, balanced asymmetry, distinctive silhouette, beautifully crafted negative space. Centered optical balance, mark occupies about 58% of square width. Quiet luxury meets contemporary Swiss graphic design, premium productivity app, very restrained. Essentially flat crisp vector-like graphic with only an extremely subtle smooth dark background gradient. No inner rounded-square tile, no container behind checkmark, no rounded bubbly shape, no texture, no embossing, no glass, no 3D, no glow, no shadows, no text, no letters, no numbers, no extra marks, no frame, no phone mockup. Full background reaches all four edges, do not round outer canvas corners. Output a single square app icon image.

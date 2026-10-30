@@ -1,0 +1,53 @@
+{
+  "locale": "ja-JP",
+  "format": "opaque RGB PNG",
+  "screenSize": "6.9-inch iPhone",
+  "specification": "https://developer.apple.com/help/app-store-connect/reference/app-information/screenshot-specifications/",
+  "captureDevice": "Todo-Store-Capture / iPhone 17 Pro Max / iOS 26.5",
+  "captureDeviceId": "D22569B9-504E-4B30-96B9-4EC67D0CF760",
+  "source": "Native app and WidgetKit screenshots; UI is not AI-generated.",
+  "privacy": "Fictional sample tasks only. Other app icons, developer tools, editing controls and system notifications excluded from final images.",
+  "crops": {
+    "home-widget.png": {
+      "x": 93,
+      "y": 282,
+      "width": 1134,
+      "height": 530
+    },
+    "lock-widget-detail.png": {
+      "x": 100,
+      "y": 2260,
+      "width": 1120,
+      "height": 250
+    }
+  },
+  "uiCaptureResult": "app-clean.xcresult: passed; 30-minute preset visibly sets 20:00 deadline to 19:30 reminder. Draft discarded without scheduling a notification.",
+  "releaseStatus": "Uploaded to App Store Connect; submitted for Apple App Review on 2026-10-30; WAITING_FOR_REVIEW",
+  "files": [
+    {
+      "file": "screenshots/ja-JP/01-lock-screen.png",
+      "width": 1320,
+      "height": 2868,
+      "sha256": "d6626c4aa8a78f87fc761415e7d739951b520382c6ea69f5dc137768c8f46027"
+    },
+    {
+      "file": "screenshots/ja-JP/02-home-widget.png",
+      "width": 1320,
+      "height": 2868,
+      "sha256": "f66b235eb4969dcb386d3664d4611331fb897aba8ab3ed2422260f8e117b36ec"
+    },
+    {
+      "file": "screenshots/ja-JP/03-priorities.png",
+      "width": 1320,
+      "height": 2868,
+      "sha256": "8a9081531310fbde60493258261777c1ee3a25c58c01152a5c21b010de2a4165"
+    },
+    {
+      "file": "screenshots/ja-JP/04-reminder.png",
+      "width": 1320,
+      "height": 2868,
+      "sha256": "c6fc4ce3c7e28150b05182acdce71ae79cd999c9b82263d0e6cc9126525deb27"
+    }
+  ],
+  "appStoreAppId": "6828646484"
+}

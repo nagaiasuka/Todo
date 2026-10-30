@@ -1,0 +1,23 @@
+{
+  "locale": "ja-JP",
+  "version": "1.0.0",
+  "bundleIdentifier": "com.nagaiasuka.todo",
+  "name": "ToDo - ロック画面ウィジェット",
+  "subtitle": "優先順位とウィジェットでタスク管理",
+  "description": "やることを、緊急度と重要度で整理するTodoアプリです。\n\n■ 4つの優先順位で整理\n「緊急かつ重要」「重要だが緊急ではない」「緊急だが重要ではない」「緊急でも重要でもない」の4分類で、タスクを見渡せます。期限日時やメモも設定できます。\n\n■ ホーム画面で優先タスクを確認\n小・中・大のウィジェットに対応。未完了タスクを、優先順位と期限とともに表示します。\n\n■ ロック画面で今日と次を確認\n今日が期限の未完了件数と、次のタスクを表示します。表示する情報はアプリの設定で切り替えられます。\n\n■ 予定の前にリマインダー\n期限の10分前・30分前・1時間前を選べます。通知日時を直接指定することもできます。期限を変更した場合は、通知時刻をもう一度選んでください。通知の表示や音はiPhoneの通知設定・集中モードに従います。\n\n■ 自分に合う配色\nオフホワイト、ダーク、端末に合わせる配色を選べます。\n\nタスクと設定は端末内に保存します。アカウント登録は不要です。",
+  "keywords": "todo,タスク,やること,優先順位,期限,リマインダー,ウィジェット,ロック画面,メモ",
+  "primaryCategory": "PRODUCTIVITY",
+  "copyright": "2026 Asuka Nagai",
+  "supportUrl": "https://dopa-min.jp/app-support/todo/",
+  "privacyPolicyUrl": "https://dopa-min.jp/app-support/todo/privacy/",
+  "reviewNotes": "アカウント登録・ログインは不要です。端末内にタスクを保存するアプリです。通知権限はリマインダーを設定したタスクの保存時に要求します。ウィジェットはホーム画面またはロック画面のカスタマイズから追加できます。",
+  "screenshotsDirectory": "store/screenshots/ja-JP",
+  "status": "submitted for Apple App Review; WAITING_FOR_REVIEW",
+  "appStoreAppId": "6828646484",
+  "buildNumber": "6",
+  "price": "free",
+  "territories": [
+    "JPN"
+  ],
+  "reviewSubmittedAt": "2026-10-30T00:43:48.293Z"
+}
