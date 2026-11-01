@@ -1,7 +1,7 @@
 {
   "appId": "6828646484",
   "version": "1.0.0",
-  "state": "WAITING_FOR_REVIEW",
+  "state": "REJECTED",
   "name": "ToDo - ロック画面ウィジェット",
   "reviewContactComplete": true,
   "selectedBuild": {
@@ -39,7 +39,13 @@
   ],
   "reviewSubmission": {
     "id": "30a61d80-8bf1-4e2e-8fb5-1af7130fe32e",
-    "state": "WAITING_FOR_REVIEW",
+    "state": "UNRESOLVED_ISSUES",
     "submittedDate": "2026-10-30T00:43:48.293Z"
+  },
+  "rejection": {
+    "guideline": "2.1",
+    "reason": "Information Needed - New App Submission",
+    "messageDate": "2026-11-01T02:16:00+09:00",
+    "requiredPhysicalDeviceRecording": true
   }
 }

@@ -6,6 +6,9 @@ const apple = require(process.env.APPLE_UTILS_MODULE || '@expo/apple-utils');
 const id = '6828646484';
 const metadata = require('./app-store-ja-JP.json');
 const mode = process.argv[2] || 'inspect';
+if (mode === 'submit' && metadata.reviewNotes.includes('Pending: a recording')) {
+  throw Error('App Review requires a physical-device screen recording. Attach the recording and update review notes before resubmitting.');
+}
 let cachedApiContext;
 
 async function pricingContext() {
