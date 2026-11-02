@@ -1,0 +1,26 @@
+{
+  "appId": "6828646484",
+  "version": "1.0.0",
+  "buildNumber": "6",
+  "buildId": "0f081f03-5a94-4229-a60c-2b044f8ef3f9",
+  "internalTesterId": "c0d3470b-b56a-4462-bdbc-62dab744c2e1",
+  "internalInvitation": "not received by owner after full tester reset",
+  "externalGroupId": "a0ee6b71-9bb8-4539-a09a-99ae12b3d096",
+  "externalGroupName": "Todo Device Test",
+  "intendedPublicLinkLimit": 1,
+  "publicLinkEnabled": true,
+  "betaReviewSubmission": {
+    "id": "0f081f03-5a94-4229-a60c-2b044f8ef3f9",
+    "betaReviewState": "WAITING_FOR_REVIEW",
+    "submittedDate": "2026-11-01T17:14:33-08:00"
+  },
+  "buildBetaState": {
+    "autoNotifyEnabled": true,
+    "internalBuildState": "IN_BETA_TESTING",
+    "externalBuildState": "WAITING_FOR_BETA_REVIEW"
+  },
+  "publicLinkLimit": 1,
+  "appStoreResubmitted": false,
+  "physicalDeviceRecording": "Still required by App Review before App Store resubmission",
+  "testFlightMetadataComplete": true
+}
