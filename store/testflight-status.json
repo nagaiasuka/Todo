@@ -4,7 +4,7 @@
   "buildNumber": "6",
   "buildId": "0f081f03-5a94-4229-a60c-2b044f8ef3f9",
   "internalTesterId": "c0d3470b-b56a-4462-bdbc-62dab744c2e1",
-  "internalInvitation": "not received by owner after full tester reset",
+  "internalInvitation": "accepted; installation confirmed via App Store Connect API",
   "externalGroupId": "a0ee6b71-9bb8-4539-a09a-99ae12b3d096",
   "externalGroupName": "Todo Device Test",
   "intendedPublicLinkLimit": 1,
@@ -22,5 +22,12 @@
   "publicLinkLimit": 1,
   "appStoreResubmitted": false,
   "physicalDeviceRecording": "Still required by App Review before App Store resubmission",
-  "testFlightMetadataComplete": true
+  "testFlightMetadataComplete": true,
+  "internalInstallation": {
+    "state": "INSTALLED",
+    "version": "1.0.0",
+    "buildNumber": "6",
+    "deviceModel": "iPhone 15",
+    "osVersion": "26.5.2"
+  }
 }

@@ -1,0 +1,23 @@
+{
+  "status": "first recording saved; awaiting user iOS update and retake",
+  "rawRecording": ".artifacts/review-recordings/2026-11-02/todo-physical-app-flow.mov",
+  "sha256": "bc2028168c4ddfd87405bec5a569b2c469a2cc0e9df3981664f9092f087c5174",
+  "durationSeconds": 97.4189,
+  "width": 1180,
+  "height": 2556,
+  "deviceModel": "iPhone 15",
+  "recordedOS": "26.5.2",
+  "appVersion": "1.0.0",
+  "buildNumber": "6",
+  "sampledFramesReviewed": 11,
+  "observed": [
+    "Task creation",
+    "30-minute-before reminder selection",
+    "Task completion and restoration",
+    "Dark appearance"
+  ],
+  "widgetsRecorded": false,
+  "quickTimeClosed": true,
+  "submittedToApple": false,
+  "requiresRetakeForLatestOS": true
+}
