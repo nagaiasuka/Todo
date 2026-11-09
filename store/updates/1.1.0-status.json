@@ -1,0 +1,30 @@
+{
+  "appId": "6828646484",
+  "version": "1.1.0",
+  "buildNumber": "7",
+  "appStoreVersionId": "a7fd3e54-5657-4128-9ca0-08ff354b42fe",
+  "easBuildId": "d926dac5-c0b9-43f7-9a2c-4cffeca5a132",
+  "easBuildUrl": "https://expo.dev/accounts/asukanagai/projects/todo-performance/builds/d926dac5-c0b9-43f7-9a2c-4cffeca5a132",
+  "sourceCommit": "1092289",
+  "buildStartedFromUncommittedWorkingTree": true,
+  "state": "WAITING_FOR_REVIEW",
+  "buildState": "FINISHED",
+  "releaseType": "AFTER_APPROVAL",
+  "checks": {
+    "domainAndRepositoryTests": 34,
+    "widgetCapacityComparisons": 1684,
+    "typecheck": "passed",
+    "lint": "passed",
+    "browserFlow": "passed; custom and recurring reminders, theme colors, persistence and 320px layout",
+    "productionSigning": "App and widget distribution signatures and App Group entitlements verified",
+    "nativeReminderUI": "passed on iOS 26.5 Simulator; daily/selected weekdays",
+    "nativeWidgetCompletion": "passed with app terminated on iOS 26.5 Simulator; widget row removed without launching app; completion persisted and journal acknowledged on restart"
+  },
+  "releaseNotes": "・1つのタスクに複数の通知日時を設定できるようになりました。\n・毎日、平日、好きな曜日と時刻で繰り返す通知を追加しました。\n・iOS 17以降の対応ウィジェットで、タスクをタップしてその場で完了できるようになりました。\n・アプリのテーマカラーを6色から選べるようになりました。",
+  "easSubmissionId": "5314062d-f6e5-40a6-957e-f959d32901ca",
+  "uploadState": "uploaded; Apple processing VALID",
+  "appStoreBuildId": "ac8c521a-b9af-4224-a974-24fa64185fcc",
+  "reviewSubmissionId": "d4e377b1-e7ba-4c47-bd95-8d15f51b0801",
+  "submittedAt": "2026-11-09T02:23:26.908Z",
+  "checkedAt": "2026-11-09T02:23:29.529Z"
+}

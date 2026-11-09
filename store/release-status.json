@@ -1,13 +1,20 @@
 {
+  "checkedAt": "2026-11-09T02:23:29.529Z",
   "appId": "6828646484",
-  "version": "1.0.0",
-  "state": "REJECTED",
+  "version": "1.1.0",
+  "state": "WAITING_FOR_REVIEW",
   "name": "ToDo - ロック画面ウィジェット",
+  "releaseType": "AFTER_APPROVAL",
   "reviewContactComplete": true,
   "selectedBuild": {
-    "id": "0f081f03-5a94-4229-a60c-2b044f8ef3f9",
-    "version": "6",
+    "id": "ac8c521a-b9af-4224-a974-24fa64185fcc",
+    "version": "7",
     "processingState": "VALID"
+  },
+  "previousLiveVersion": {
+    "version": "1.0.0",
+    "buildNumber": "6",
+    "state": "READY_FOR_SALE"
   },
   "territories": [
     "JPN"
@@ -25,7 +32,7 @@
       "state": "COMPLETE"
     },
     {
-      "name": "02-home-widget.png",
+      "name": "02-home-widget-1.1.0.png",
       "state": "COMPLETE"
     },
     {
@@ -33,19 +40,13 @@
       "state": "COMPLETE"
     },
     {
-      "name": "04-reminder.png",
+      "name": "04-reminder-1.1.0.png",
       "state": "COMPLETE"
     }
   ],
   "reviewSubmission": {
-    "id": "30a61d80-8bf1-4e2e-8fb5-1af7130fe32e",
-    "state": "UNRESOLVED_ISSUES",
-    "submittedDate": "2026-10-30T00:43:48.293Z"
-  },
-  "rejection": {
-    "guideline": "2.1",
-    "reason": "Information Needed - New App Submission",
-    "messageDate": "2026-11-01T02:16:00+09:00",
-    "requiredPhysicalDeviceRecording": true
+    "id": "d4e377b1-e7ba-4c47-bd95-8d15f51b0801",
+    "state": "WAITING_FOR_REVIEW",
+    "submittedDate": "2026-11-09T02:23:26.908Z"
   }
 }

@@ -5,7 +5,7 @@
   "specification": "https://developer.apple.com/help/app-store-connect/reference/app-information/screenshot-specifications/",
   "captureDevice": "Todo-Store-Capture / iPhone 17 Pro Max / iOS 26.5",
   "captureDeviceId": "D22569B9-504E-4B30-96B9-4EC67D0CF760",
-  "source": "Native app and WidgetKit screenshots; UI is not AI-generated.",
+  "source": "Native app and WidgetKit screenshots. Home widget and reminder recaptured for 1.1.0; existing lock-screen and priority-list captures retained. UI is not AI-generated.",
   "privacy": "Fictional sample tasks only. Other app icons, developer tools, editing controls and system notifications excluded from final images.",
   "crops": {
     "home-widget.png": {
@@ -21,8 +21,8 @@
       "height": 250
     }
   },
-  "uiCaptureResult": "app-clean.xcresult: passed; 30-minute preset visibly sets 20:00 deadline to 19:30 reminder. Draft discarded without scheduling a notification.",
-  "releaseStatus": "Uploaded to App Store Connect; submitted for Apple App Review on 2026-10-30; WAITING_FOR_REVIEW",
+  "uiCaptureResult": "release-capture/result3.xcresult: passed; native task editor enables repeating notifications and selects Monday/Wednesday/Friday at 08:00. Captured a draft without scheduling a notification.",
+  "releaseStatus": "1.1.0 submitted for Apple App Review on 2026-11-09; WAITING_FOR_REVIEW",
   "files": [
     {
       "file": "screenshots/ja-JP/01-lock-screen.png",
@@ -34,7 +34,8 @@
       "file": "screenshots/ja-JP/02-home-widget.png",
       "width": 1320,
       "height": 2868,
-      "sha256": "f66b235eb4969dcb386d3664d4611331fb897aba8ab3ed2422260f8e117b36ec"
+      "sha256": "4b7080f4734a9bf6e91591cdbd78821c6f857786388a866da4c253d7df4e3dbb",
+      "appStoreFileName": "02-home-widget-1.1.0.png"
     },
     {
       "file": "screenshots/ja-JP/03-priorities.png",
@@ -46,8 +47,10 @@
       "file": "screenshots/ja-JP/04-reminder.png",
       "width": 1320,
       "height": 2868,
-      "sha256": "c6fc4ce3c7e28150b05182acdce71ae79cd999c9b82263d0e6cc9126525deb27"
+      "sha256": "f92e40d3d48a377577a8a9141715569fcfa3c29cb1ddf0a88c15e533175688b2",
+      "appStoreFileName": "04-reminder-1.1.0.png"
     }
   ],
-  "appStoreAppId": "6828646484"
+  "appStoreAppId": "6828646484",
+  "appVersion": "1.1.0"
 }

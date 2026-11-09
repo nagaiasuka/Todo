@@ -1,0 +1,31 @@
+{
+  "checkedAt": "2026-11-09T02:23:29.529Z",
+  "appId": "6828646484",
+  "version": "1.1.0",
+  "buildNumber": "7",
+  "appStoreVersionId": "a7fd3e54-5657-4128-9ca0-08ff354b42fe",
+  "buildId": "ac8c521a-b9af-4224-a974-24fa64185fcc",
+  "submissionId": "d4e377b1-e7ba-4c47-bd95-8d15f51b0801",
+  "state": "WAITING_FOR_REVIEW",
+  "versionState": "WAITING_FOR_REVIEW",
+  "submittedDate": "2026-11-09T02:23:26.908Z",
+  "releaseType": "AFTER_APPROVAL",
+  "screenshots": [
+    {
+      "name": "01-lock-screen.png",
+      "state": "COMPLETE"
+    },
+    {
+      "name": "02-home-widget-1.1.0.png",
+      "state": "COMPLETE"
+    },
+    {
+      "name": "03-priorities.png",
+      "state": "COMPLETE"
+    },
+    {
+      "name": "04-reminder-1.1.0.png",
+      "state": "COMPLETE"
+    }
+  ]
+}

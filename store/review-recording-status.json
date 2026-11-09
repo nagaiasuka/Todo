@@ -1,5 +1,5 @@
 {
-  "status": "first recording saved; awaiting user iOS update and retake",
+  "status": "existing recording submitted with 1.0.0; version 1.0.0 is now published",
   "rawRecording": ".artifacts/review-recordings/2026-11-02/todo-physical-app-flow.mov",
   "sha256": "bc2028168c4ddfd87405bec5a569b2c469a2cc0e9df3981664f9092f087c5174",
   "durationSeconds": 97.4189,
@@ -18,6 +18,9 @@
   ],
   "widgetsRecorded": false,
   "quickTimeClosed": true,
-  "submittedToApple": false,
-  "requiresRetakeForLatestOS": true
+  "submittedToApple": true,
+  "requiresRetakeForLatestOS": true,
+  "submittedAt": "2026-11-02T07:46:11.714Z",
+  "attachmentId": "3fd056c2-c75e-4a88-ae6f-6e765698d0b5",
+  "resubmissionDecision": "User requested trying the existing recording; no claim of latest-OS capture was made."
 }

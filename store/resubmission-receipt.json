@@ -1,0 +1,24 @@
+{
+  "checkedAt": "2026-11-02T07:46:13.745Z",
+  "submissionId": "30a61d80-8bf1-4e2e-8fb5-1af7130fe32e",
+  "submission": {
+    "platform": "IOS",
+    "submittedDate": "2026-11-02T07:46:11.714Z",
+    "state": "WAITING_FOR_REVIEW"
+  },
+  "version": {
+    "platform": "IOS",
+    "versionString": "1.0.0",
+    "appStoreState": "WAITING_FOR_REVIEW",
+    "appVersionState": "WAITING_FOR_REVIEW",
+    "copyright": "2026 Asuka Nagai",
+    "reviewType": "APP_STORE",
+    "releaseType": "AFTER_APPROVAL",
+    "earliestReleaseDate": null,
+    "usesIdfa": null,
+    "downloadable": true,
+    "createdDate": "2026-10-29T17:08:02-07:00"
+  },
+  "attachmentId": "3fd056c2-c75e-4a88-ae6f-6e765698d0b5",
+  "fileName": "todo-physical-app-flow.mov"
+}
