@@ -1,3 +1,7 @@
+import { isThemeColor, type ThemeColor } from './appearance';
+
+export type RecurringReminder = { hour: number; minute: number; weekdays: number[] };
+
 export type Task = {
   id: string;
   title: string;
@@ -5,6 +9,8 @@ export type Task = {
   important: boolean;
   dueAt: string | null;
   reminderAt?: string | null;
+  reminderAts?: string[];
+  recurringReminder?: RecurringReminder | null;
   note: string;
   order: number;
   completedAt: string | null;
@@ -12,12 +18,12 @@ export type Task = {
 };
 
 export type ThemeMode = 'light' | 'dark' | 'system';
-export type Settings = { showTodayCount: boolean; showNextTask: boolean; theme?: ThemeMode };
-export type TaskInput = Pick<Task, 'title' | 'urgent' | 'important' | 'dueAt' | 'reminderAt' | 'note'>;
+export type Settings = { showTodayCount: boolean; showNextTask: boolean; theme?: ThemeMode; themeColor?: ThemeColor };
+export type TaskInput = Pick<Task, 'title' | 'urgent' | 'important' | 'dueAt' | 'reminderAt' | 'reminderAts' | 'recurringReminder' | 'note'>;
 export type Draft = TaskInput & { taskId: string | null };
-export type Document = { version: 1; tasks: Task[]; settings: Settings; draft: Draft | null };
+export type Document = { version: 1; tasks: Task[]; settings: Settings; draft: Draft | null; appliedWidgetActions?: string[] };
 export const initialDocument: Document = {
-  version: 1, tasks: [], settings: { showTodayCount: true, showNextTask: true, theme: 'light' }, draft: null,
+  version: 1, tasks: [], settings: { showTodayCount: true, showNextTask: true, theme: 'light', themeColor: 'green' }, draft: null,
 };
 export const categories = [
   { title: '緊急かつ重要', short: '緊急・重要', caption: 'まず、ここから。', urgent: true, important: true, color: '#C1443D' },
@@ -63,11 +69,39 @@ export function reorder(tasks: Task[], id: string, direction: -1 | 1): Task[] {
   return tasks.map(t => orders.has(t.id) ? { ...t, order: orders.get(t.id)! } : t);
 }
 
+// An explicit array takes precedence, including [] when all reminders are removed.
+// Legacy single reminders remain readable without changing the storage key.
+export function reminderDates(input: Pick<TaskInput, 'reminderAt' | 'reminderAts'>): string[] {
+  const dates = input.reminderAts ?? (input.reminderAt ? [input.reminderAt] : []);
+  return [...new Set(dates.map(at => new Date(at).toISOString()))].sort();
+}
+
+export function validRecurringReminder(value: unknown): value is RecurringReminder {
+  if (!value || typeof value !== 'object') return false;
+  const r = value as RecurringReminder;
+  return Number.isInteger(r.hour) && r.hour >= 0 && r.hour < 24 &&
+    Number.isInteger(r.minute) && r.minute >= 0 && r.minute < 60 &&
+    Array.isArray(r.weekdays) && r.weekdays.length > 0 && r.weekdays.length <= 7 &&
+    r.weekdays.every(day => Number.isInteger(day) && day >= 0 && day <= 6) && new Set(r.weekdays).size === r.weekdays.length;
+}
+
+export function recurringReminderLabel(r: RecurringReminder): string {
+  const days = r.weekdays.length === 7 ? '毎日' : [1, 2, 3, 4, 5, 6, 0].filter(day => r.weekdays.includes(day)).map(day => '日月火水木金土'[day]).join('・');
+  return `${days} ${String(r.hour).padStart(2, '0')}:${String(r.minute).padStart(2, '0')}`;
+}
+
+function validReminderDates(input: TaskInput): boolean {
+  return (input.recurringReminder == null || validRecurringReminder(input.recurringReminder)) &&
+    (input.reminderAt == null || typeof input.reminderAt === 'string' && Number.isFinite(Date.parse(input.reminderAt))) &&
+    (input.reminderAts === undefined || Array.isArray(input.reminderAts) &&
+      input.reminderAts.every(at => typeof at === 'string' && Number.isFinite(Date.parse(at))));
+}
+
 export function validInput(input: TaskInput): boolean {
   return !!input.title.trim() && input.title.trim().length <= 200 && input.note.length <= 4000 &&
     typeof input.urgent === 'boolean' && typeof input.important === 'boolean' &&
     (input.dueAt === null || Number.isFinite(Date.parse(input.dueAt))) &&
-    (input.reminderAt == null || typeof input.reminderAt === 'string' && Number.isFinite(Date.parse(input.reminderAt)));
+    validReminderDates(input);
 }
 
 function isInput(value: unknown): value is TaskInput {
@@ -79,7 +113,9 @@ function isInput(value: unknown): value is TaskInput {
 export function parseDocument(raw: string): Document {
   const v = JSON.parse(raw) as Document;
   if (v.version !== 1 || !Array.isArray(v.tasks) || !v.settings ||
+    !(v.appliedWidgetActions === undefined || Array.isArray(v.appliedWidgetActions) && v.appliedWidgetActions.every(id => typeof id === 'string')) ||
     typeof v.settings.showTodayCount !== 'boolean' || typeof v.settings.showNextTask !== 'boolean' ||
+    !(v.settings.themeColor === undefined || isThemeColor(v.settings.themeColor)) ||
     !(v.settings.theme === undefined || ['light', 'dark', 'system'].includes(v.settings.theme)) ||
     !v.tasks.every(t => isInput(t) && typeof t.id === 'string' && t.id.length > 0 &&
       Number.isFinite(t.order) && typeof t.createdAt === 'string' && Number.isFinite(Date.parse(t.createdAt)) &&
@@ -90,11 +126,11 @@ export function parseDocument(raw: string): Document {
     const d = v.draft;
     if (!d || typeof d.title !== 'string' || typeof d.note !== 'string' ||
       typeof d.urgent !== 'boolean' || typeof d.important !== 'boolean' ||
-      !(d.reminderAt == null || typeof d.reminderAt === 'string' && Number.isFinite(Date.parse(d.reminderAt))) ||
+      !validReminderDates(d) ||
       !(d.taskId === null || typeof d.taskId === 'string') ||
       !(d.dueAt === null || (typeof d.dueAt === 'string' && Number.isFinite(Date.parse(d.dueAt))))) throw new Error('下書きを読み込めませんでした。');
   }
-  return { ...v, settings: { ...v.settings, theme: v.settings.theme ?? 'light' } };
+  return { ...v, settings: { ...v.settings, theme: v.settings.theme ?? 'light', themeColor: v.settings.themeColor ?? 'green' } };
 }
 
 export function dueLabel(dueAt: string | null, now = new Date()): string {

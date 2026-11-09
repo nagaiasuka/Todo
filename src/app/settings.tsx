@@ -1,6 +1,8 @@
+import Constants from 'expo-constants';
 import { Linking, Pressable, ScrollView, Switch, Text, View } from 'react-native';
 import { useState } from 'react';
 import { useStore } from '../data/Store';
+import { themeColors, type ThemeColor } from '../domain/appearance';
 import { type Settings } from '../domain/tasks';
 import { Card, styles as s } from '../ui/components';
 import { useTheme } from '../ui/theme';
@@ -20,18 +22,37 @@ export default function SettingsScreen() {
     <Card>
       {([['light', 'オフホワイト'], ['dark', 'ダーク'], ['system', '端末に合わせる']] as const).map(([value, label]) => {
         const selected = (store.document.settings.theme ?? 'light') === value;
-        return <Pressable key={value} accessibilityRole="radio" accessibilityState={{ checked: selected }} accessibilityLabel={label} disabled={store.saving}
+        return <Pressable key={value} accessibilityRole="radio" accessibilityState={{ checked: selected }} aria-checked={selected} accessibilityLabel={label} disabled={store.saving}
           onPress={() => void update('theme', value)} style={[s.row, { minHeight: 48, paddingHorizontal: 12, borderRadius: 8, backgroundColor: selected ? c.field : 'transparent' }]}>
           <Text style={{ flex: 1, color: c.text, fontSize: 16, fontWeight: selected ? '700' : '400' }}>{label}</Text>
           {selected && <Text style={{ color: c.text, fontSize: 18 }}>✓</Text>}
         </Pressable>;
       })}
     </Card>
+    <Text style={[s.label, { color: c.text }]} accessibilityRole="header">テーマカラー</Text>
+    <Card>
+      <Text style={[s.subtitle, { color: c.muted }]}>ボタンやチェックの色を選べます。明るい配色でもダークでも使えます。</Text>
+      <View accessibilityRole="radiogroup" accessibilityLabel="テーマカラー" style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 10 }}>
+        {(Object.keys(themeColors) as ThemeColor[]).map(value => {
+          const color = themeColors[value];
+          const selected = (store.document.settings.themeColor ?? 'green') === value;
+          return <Pressable key={value} accessibilityRole="radio" accessibilityLabel={color.label} accessibilityState={{ checked: selected }} aria-checked={selected} disabled={store.saving}
+            onPress={() => void update('themeColor', value)} style={({ pressed }) => ({ flexGrow: 1, flexBasis: '45%', minHeight: 58, padding: 12, borderRadius: 10,
+              borderWidth: 2, borderColor: selected ? c.control : c.line, backgroundColor: c.field, opacity: pressed ? 0.7 : 1, flexDirection: 'row', alignItems: 'center', gap: 8 })}>
+            <View style={{ width: 24, height: 24, borderRadius: 12, backgroundColor: color.accent, borderWidth: 1, borderColor: color.control }} />
+            <Text style={{ flex: 1, color: c.text, fontSize: 14, fontWeight: selected ? '700' : '400' }}>{color.label}</Text>
+            {selected && <Text style={{ color: c.text }}>✓</Text>}
+          </Pressable>;
+        })}
+      </View>
+      <Text style={[s.subtitle, { color: c.muted }]}>プレビュー</Text>
+      <View style={[s.action, { backgroundColor: c.accent }]}><Text style={[s.actionText, { color: c.accentText }]}>＋ タスクを追加</Text></View>
+    </Card>
     <Text style={[s.label, { color: c.text }]} accessibilityRole="header">ロック画面ウィジェット</Text>
     <Card>
       {([['showTodayCount', '今日の未完了タスク数', '期限日が今日の未完了タスクを集計します。'], ['showNextTask', '次のタスク', '期限が最も近い未完了タスクを表示します。']] as const).map(([key, title, description]) => <View key={key} style={[s.row, { paddingVertical: 8 }]}>
         <View style={{ flex: 1, gap: 8 }}><Text style={{ color: c.text, fontSize: 16, fontWeight: '700' }}>{title}</Text><Text style={[s.subtitle, { color: c.muted }]}>{description}</Text></View>
-        <Switch accessibilityLabel={title} value={store.document.settings[key]} disabled={store.saving} trackColor={{ true: '#719D2D', false: c.line }} onValueChange={v => void update(key, v)} />
+        <Switch accessibilityLabel={title} value={store.document.settings[key]} disabled={store.saving} trackColor={{ true: c.control, false: c.line }} onValueChange={v => void update(key, v)} />
       </View>)}
     </Card>
     {!!error && <Text accessibilityRole="alert" style={{ color: c.danger }}>{error}</Text>}
@@ -53,6 +74,6 @@ export default function SettingsScreen() {
       </Pressable>)}
     </Card>
     {!!linkError && <Text accessibilityRole="alert" style={{ color: c.danger }}>{linkError}</Text>}
-    <Text style={[s.subtitle, { color: c.muted }]}>Todo 1.0 · データはこの端末に保存されます。</Text>
+    <Text style={[s.subtitle, { color: c.muted }]}>Todo {Constants.expoConfig?.version ?? '1.1.0'} · データはこの端末に保存されます。</Text>
   </ScrollView>;
 }

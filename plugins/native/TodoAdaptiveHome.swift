@@ -52,9 +52,9 @@ private struct TodoAdaptiveHomeContent: View {
   @Environment(\.widgetFamily) private var family
 
   private var rows: [TodoWidgetRow] {
-    (props["rows"] as? [[String: Any]] ?? []).compactMap(TodoWidgetRow.init)
+    TodoInteractiveTasks.filtered(props["rows"] as? [[String: Any]] ?? []).compactMap(TodoWidgetRow.init)
   }
-  private var total: Int { props["total"] as? Int ?? rows.count }
+  private var total: Int { rows.count }
   private var accent: Color { colorScheme == .dark ? Color(red: 0.77, green: 0.96, blue: 0.39) : Color(red: 0.25, green: 0.43, blue: 0.04) }
 
   // These very same UIFont instances are used for measurement and rendering.
@@ -93,7 +93,7 @@ private struct TodoAdaptiveHomeContent: View {
       let footerFont = scaledFont(11, weight: .semibold, style: .caption1)
       let headingHeight = ceil(headingFont.lineHeight)
       let footerHeight = ceil(footerFont.lineHeight)
-      let textWidth = max(1, geometry.size.width - 10)
+      let textWidth = max(1, geometry.size.width - 34)
       let heights = rows.map { titleHeight($0.title, width: textWidth, font: titleFont) + 3 + ceil(metaFont.lineHeight) }
       let count = TodoWidgetCapacity.count(heights: heights, available: geometry.size.height - headingHeight - 9, footer: footerHeight, total: total)
 
@@ -113,12 +113,13 @@ private struct TodoAdaptiveHomeContent: View {
         } else {
           VStack(alignment: .leading, spacing: 7) {
             ForEach(Array(rows.prefix(count).enumerated()), id: \.element.id) { index, row in
-              if family == .systemSmall {
-                taskRow(row, titleFont: titleFont, metaFont: metaFont, width: textWidth, height: heights[index])
-              } else {
-                Link(destination: URL(string: "todo-performance:///task?id=\(row.id.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? row.id)")!) {
+              if #available(iOS 17.0, *) {
+                Button(intent: TodoCompleteTaskIntent(taskId: row.id)) {
                   taskRow(row, titleFont: titleFont, metaFont: metaFont, width: textWidth, height: heights[index])
                 }.buttonStyle(.plain)
+                  .accessibilityLabel("\(row.title)を完了する")
+              } else {
+                taskRow(row, titleFont: titleFont, metaFont: metaFont, width: textWidth, height: heights[index])
               }
             }
             if total > count {
@@ -139,8 +140,9 @@ private struct TodoAdaptiveHomeContent: View {
 
   private func taskRow(_ row: TodoWidgetRow, titleFont: UIFont, metaFont: UIFont, width: CGFloat, height: CGFloat) -> some View {
     HStack(alignment: .top, spacing: 6) {
-      RoundedRectangle(cornerRadius: 2).fill(row.category == 0 ? Color(red: 0.8, green: 0.27, blue: 0.23) : accent)
-        .frame(width: 4, height: height)
+      Image(systemName: "circle").font(.system(size: 20))
+        .foregroundStyle(row.category == 0 ? Color(red: 0.8, green: 0.27, blue: 0.23) : accent)
+        .frame(width: 22, height: height, alignment: .top)
       VStack(alignment: .leading, spacing: 3) {
         Text(row.title).font(Font(titleFont)).foregroundStyle(.primary)
           .lineLimit(2).multilineTextAlignment(.leading)

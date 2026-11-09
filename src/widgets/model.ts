@@ -1,6 +1,7 @@
 import { categories, categoryOf, dueLabel, nextTask, pendingTasks, todayCount, type Document, type ThemeMode } from '../domain/tasks';
+import { plannedReminders } from '../domain/reminders';
 
-export type HomeProps = { rows: { id: string; title: string; classification: string; category: number; due: string; dueAt: string }[]; total: number; theme?: ThemeMode };
+export type HomeProps = { rows: { id: string; title: string; classification: string; category: number; due: string; dueAt: string; notificationIds: string[] }[]; total: number; theme?: ThemeMode };
 // Expo persists props in UserDefaults (a property list); null/undefined values
 // are not supported. Omit disabled keys entirely, including initial props.
 export type LockProps = { today?: number; next?: string; nextDeadline?: string; nextEmpty?: boolean };
@@ -8,7 +9,8 @@ export type LockProps = { today?: number; next?: string; nextDeadline?: string; 
 export function homeProps(document: Document, now: Date): HomeProps {
   const tasks = pendingTasks(document.tasks);
   return { theme: document.settings.theme ?? 'light', total: tasks.length, rows: tasks.map(task => ({ id: task.id, title: task.title,
-    classification: categories[categoryOf(task)].short, category: categoryOf(task), due: dueLabel(task.dueAt, now), dueAt: task.dueAt ?? '' })) };
+    classification: categories[categoryOf(task)].short, category: categoryOf(task), due: dueLabel(task.dueAt, now), dueAt: task.dueAt ?? '',
+    notificationIds: [`todo-reminder:${task.id}`, ...plannedReminders([task], now.getTime()).map(reminder => reminder.identifier)] })) };
 }
 export function lockProps(document: Document, now: Date): LockProps {
   const next = document.settings.showNextTask ? nextTask(document.tasks) : null;

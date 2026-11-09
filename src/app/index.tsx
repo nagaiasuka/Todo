@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Alert, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useStore } from '../data/Store';
-import { categories, categoryOf, dueLabel, pendingTasks, todayCount, type Task } from '../domain/tasks';
+import { categories, categoryOf, dueLabel, pendingTasks, todayCount, reminderDates, recurringReminderLabel, type Task } from '../domain/tasks';
 import { Action, Card, styles as s } from '../ui/components';
 import { useTheme } from '../ui/theme';
 
@@ -20,6 +20,9 @@ export default function ListScreen() {
   function TaskRow({ task, index, group }: { task: Task; index: number; group: Task[] }) {
     const category = categories[categoryOf(task)];
     const overdue = task.dueAt && !task.completedAt && new Date(task.dueAt).getTime() < store.now.getTime();
+    const reminders = reminderDates(task);
+    const futureReminders = reminders.filter(at => Date.parse(at) > store.now.getTime());
+    const nextReminder = futureReminders[0];
     const canMove = (offset: number) => {
       const other = group[index + offset];
       return !!other && !task.completedAt && task.dueAt === other.dueAt;
@@ -35,7 +38,8 @@ export default function ListScreen() {
         <Pressable accessibilityRole="button" accessibilityLabel={`${task.title}を編集、${category.title}、${dueLabel(task.dueAt)}`} onPress={() => router.push({ pathname: '/task', params: { id: task.id } })} style={{ flex: 1, paddingVertical: 10, gap: 6 }}>
           <Text style={{ color: task.completedAt ? c.muted : c.text, fontSize: 17, fontWeight: '600', lineHeight: 25, textDecorationLine: task.completedAt ? 'line-through' : 'none' }}>{task.title}</Text>
           {!!task.completedAt && <Text style={{ color: c.text, fontSize: 13, fontWeight: '700' }}>{category.title}</Text>}
-          {!!task.reminderAt && <Text style={{ color: c.muted, fontSize: 13 }}>{task.completedAt ? '通知停止（完了済み）' : `通知：${dueLabel(task.reminderAt)}`}</Text>}
+          {!!task.recurringReminder && <Text style={{ color: c.muted, fontSize: 13 }}>{task.completedAt ? '繰り返し通知停止（完了済み）' : `繰り返し：${recurringReminderLabel(task.recurringReminder)}`}</Text>}
+          {!!reminders.length && <Text style={{ color: c.muted, fontSize: 13 }}>{task.completedAt ? '通知停止（完了済み）' : nextReminder ? `次の通知：${dueLabel(nextReminder)}${futureReminders.length > 1 ? ` ほか${futureReminders.length - 1}件` : ''}` : '設定した通知日時は過ぎています'}</Text>}
           <Text style={{ color: overdue ? c.danger : c.muted, fontSize: 13, fontWeight: '600' }}>{overdue ? '期限超過 · ' : ''}{dueLabel(task.dueAt)}{task.note ? '   · メモあり' : ''}</Text>
         </Pressable>
       </View>

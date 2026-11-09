@@ -9,6 +9,7 @@ const doc = tasks => ({ ...initialDocument, settings: { ...initialDocument.setti
 test('appearance defaults to off-white for legacy data, persists choices and rejects invalid values', async () => {
   const legacy = { ...doc([]), settings: { showTodayCount: true, showNextTask: false } };
   assert.equal(parseDocument(JSON.stringify(legacy)).settings.theme, 'light');
+  assert.equal(parseDocument(JSON.stringify(legacy)).settings.themeColor, 'green');
   let saved = JSON.stringify(legacy);
   const storage = { getItem: async () => saved, setItem: async (_key, value) => { saved = value; } };
   const repository = new Repository(storage); await repository.load();
@@ -20,6 +21,15 @@ test('appearance defaults to off-white for legacy data, persists choices and rej
     assert.equal(homeProps(loaded, new Date()).theme, theme);
   }
   assert.throws(() => parseDocument(JSON.stringify({ ...legacy, settings: { ...legacy.settings, theme: 'invalid' } })));
+  for (const themeColor of ['green', 'blue', 'lavender', 'rose', 'orange', 'gray']) {
+    await repository.update(d => ({ ...d, settings: { ...d.settings, themeColor } }));
+    const loaded = await new Repository(storage).load();
+    assert.equal(loaded.settings.themeColor, themeColor);
+    assert.equal(loaded.settings.showNextTask, false);
+  }
+  for (const invalid of ['invalid', 'constructor', '__proto__', null, 42]) {
+    assert.throws(() => parseDocument(JSON.stringify({ ...legacy, settings: { ...legacy.settings, themeColor: invalid } })));
+  }
 });
 
 test('four classifications take precedence over deadlines', () => {

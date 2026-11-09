@@ -2,10 +2,11 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from 'react';
 import { AppState } from 'react-native';
 import { Repository } from './repository';
-import { type Document, type TaskInput, type Draft, type Settings, initialDocument, reorder, validInput, sameLocalDay } from '../domain/tasks';
+import { type Document, type TaskInput, type Draft, type Settings, initialDocument, reorder, validInput, sameLocalDay, reminderDates } from '../domain/tasks';
 import { syncWidgets } from '../widgets/sync';
 import { requestReminderPermission, syncReminders } from '../notifications/reminders';
 import { plannedReminders, REMINDER_LIMIT } from '../domain/reminders';
+import { widgetActions } from '../widgets/actions';
 
 type Store = {
   document: Document; now: Date; ready: boolean; loadError: string | null; widgetError: boolean; reminderError: string | null; saving: boolean;
@@ -19,7 +20,7 @@ type Store = {
 const Context = createContext<Store | null>(null);
 
 export function StoreProvider({ children }: { children: ReactNode }) {
-  const [repository] = useState(() => new Repository(AsyncStorage));
+  const [repository] = useState(() => new Repository(AsyncStorage, widgetActions));
   const [document, setDocument] = useState(initialDocument);
   const latest = useRef(document);
   const [ready, setReady] = useState(false);
@@ -52,23 +53,41 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   }, [repository, acceptLoaded]);
   useEffect(() => {
     if (!ready) return;
-    const subscription = AppState.addEventListener('change', state => { if (state === 'active') refresh(); });
+    let active = AppState.currentState === 'active';
+    let syncing = false;
+    const syncWidgetActions = async () => {
+      if (syncing) return;
+      syncing = true;
+      try {
+        if (repository.hasWidgetActions()) {
+          const value = await repository.update(document => document);
+          acceptLoaded(value);
+        }
+      } catch { setWidgetError(true); }
+      finally { syncing = false; }
+    };
+    const subscription = AppState.addEventListener('change', state => {
+      active = state === 'active';
+      if (active) void syncWidgetActions().then(refresh);
+    });
+    const actionTimer = setInterval(() => { if (active) void syncWidgetActions(); }, 1000);
     // Refresh date labels/counts while foregrounded, including across midnight.
     const timer = setInterval(() => {
       const time = new Date();
       if (!sameLocalDay(clock.current, time)) refresh();
       else { clock.current = time; setNow(time); }
     }, 60000);
-    return () => { subscription.remove(); clearInterval(timer); };
-  }, [ready, refresh]);
+    return () => { subscription.remove(); clearInterval(timer); clearInterval(actionTimer); };
+  }, [ready, refresh, repository, acceptLoaded]);
 
   const update = async (change: (value: Document) => Document, widgets = true) => {
     if (!ready) throw new Error('読み込みが完了していません。');
     setPending(p => p + 1);
     try {
       const value = await repository.update(change);
+      const tasksChanged = value.tasks !== latest.current.tasks;
       latest.current = value; setDocument(value);
-      if (widgets) {
+      if (widgets || tasksChanged) {
         refreshReminders(value);
         try { syncWidgets(value); setWidgetError(false); } catch { setWidgetError(true); }
       }
@@ -79,15 +98,18 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     saveTask: async (input, id) => {
       if (!validInput(input)) throw new Error('タスク名と期限を確認してください。');
       const original = latest.current.tasks.find(t => t.id === id);
-      if (input.reminderAt && !original?.completedAt) {
-        if (input.reminderAt !== original?.reminderAt && Date.parse(input.reminderAt) <= Date.now())
+      const reminderAts = reminderDates(input);
+      if ((reminderAts.length || input.recurringReminder) && !original?.completedAt) {
+        const previous = new Set(original ? reminderDates(original) : []);
+        if (reminderAts.some(at => !previous.has(at) && Date.parse(at) <= Date.now()))
           throw new Error('通知日時は現在より後に設定してください。');
-        if (Date.parse(input.reminderAt) > Date.now()) await requestReminderPermission();
+        if (input.recurringReminder || reminderAts.some(at => Date.parse(at) > Date.now())) await requestReminderPermission();
       }
       await update(value => {
         const normalized: TaskInput = {
           title: input.title.trim(), note: input.note.trim(),
-          urgent: input.urgent, important: input.important, dueAt: input.dueAt, reminderAt: input.reminderAt ?? null,
+          urgent: input.urgent, important: input.important, dueAt: input.dueAt, reminderAt: null, reminderAts,
+          recurringReminder: input.recurringReminder ? { ...input.recurringReminder, weekdays: [...input.recurringReminder.weekdays].sort() } : null,
         };
         if (id && !value.tasks.some(t => t.id === id)) throw new Error('タスクが見つかりません。');
         const now = new Date().toISOString();
