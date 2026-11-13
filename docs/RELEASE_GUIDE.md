@@ -124,4 +124,4 @@ App Store Connectで対象のアプリバージョンを開きます。
 
 ## 9. 現在の記録と注意
 
-READMEとstore/updates/1.1.0-review-receipt.jsonには、1.1.0（build 7）が2026-11-09にApp Reviewへ提出され、記録時点でWAITING_FOR_REVIEW、承認後自動公開設定とあります。作業時点の状態はApp Store Connectで確認してください。新しいビルドを作る前に、この審査が現在も有効かを確認してください。
+App Storeの公開ページは確認済みです: [ToDo - ロック画面ウィジェット](https://apps.apple.com/jp/app/todo-%E3%83%AD%E3%83%83%E3%82%AF%E7%94%BB%E9%9D%A2%E3%82%A6%E3%82%A3%E3%82%B8%E3%82%A7%E3%83%83%E3%83%88/id6828646484)。READMEとstore/updates/1.1.0-review-receipt.jsonには、1.1.0（build 7）が2026-11-09にApp Reviewへ提出され、記録時点でWAITING_FOR_REVIEW、承認後自動公開設定とあります。公開ページだけでは現在の配信バージョンや審査状況は分からないため、App Store Connectで現状を確認してください。新しいビルドを作る前に、この審査が現在も有効かを確認してください。
