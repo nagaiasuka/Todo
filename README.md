@@ -1,5 +1,7 @@
 # Todo
 
+> 引き継ぎ時は [プロジェクト引き継ぎガイド](docs/PROJECT_HANDOFF.md)、ビルド・公開時は [iOSリリース手順](docs/RELEASE_GUIDE.md) を参照してください。
+
 優先度を4分類して整理する、iPhone向けのローカルファーストTodoアプリ。Expo SDK 58 / React Native / TypeScriptで実装しています。
 
 ## 起動
