@@ -16,11 +16,10 @@ public final class TodoAppUsageModule: Module {
     Constant("isSimulator") { true }
     #else
     AsyncFunction("configure") { (selection: String, interval: Int) async throws -> [String: Any]? in
-      guard #available(iOS 17.4, *),
-            let presenter = self.appContext?.utilities?.currentViewController() else {
+      guard #available(iOS 17.4, *) else {
         throw UsageError("アプリ選択画面を開けませんでした。")
       }
-      return try await UsageMonitoring.configure(from: presenter, selection: selection, interval: interval)
+      return try await self.configureUsagePicker(selection: selection, interval: interval)
     }
 
     AsyncFunction("sync") { (json: String) async throws in
@@ -28,6 +27,18 @@ public final class TodoAppUsageModule: Module {
     }
     #endif
   }
+
+  #if !targetEnvironment(simulator)
+  @available(iOS 17.4, *)
+  @MainActor
+  private func configureUsagePicker(selection: String, interval: Int) async throws -> [String: Any]? {
+    // Expo resolves the presenter using MainActor.assumeIsolated.
+    guard let presenter = appContext?.utilities?.currentViewController() else {
+      throw UsageError("アプリ選択画面を開けませんでした。")
+    }
+    return try await UsageMonitoring.configure(from: presenter, selection: selection, interval: interval)
+  }
+  #endif
 }
 
 #if !targetEnvironment(simulator)
