@@ -1,3 +1,4 @@
+import { appUsage, appUsagePreview } from '../notifications/appUsage';
 import { useEffect, useRef, useState } from 'react';
 import { router, useLocalSearchParams, usePreventRemove } from 'expo-router';
 import { KeyboardAvoidingView, Platform, Pressable, ScrollView, Switch, Text, TextInput, View } from 'react-native';
@@ -24,7 +25,7 @@ function TaskEditor({ params }: { params: TaskParams }) {
   const [original] = useState(() => store.document.tasks.find(t => t.id === id));
   const classification = categories[Number(params.category)] ?? categories[0];
   const fresh: Draft = { taskId: id, title: original?.title ?? '', urgent: original?.urgent ?? classification.urgent,
-    important: original?.important ?? classification.important, dueAt: original?.dueAt ?? null, reminderAt: null, reminderAts: original ? reminderDates(original) : [], recurringReminder: original?.recurringReminder ?? null, note: original?.note ?? '' };
+    important: original?.important ?? classification.important, dueAt: original?.dueAt ?? null, reminderAt: null, reminderAts: original ? reminderDates(original) : [], recurringReminder: original?.recurringReminder ?? null, usageReminder: original?.usageReminder ?? null, note: original?.note ?? '' };
   const [input, setInput] = useState<Draft>(() => {
     const draft = cachedDraft && (params.resume === '1' || cachedDraft.taskId === id) ? cachedDraft : fresh;
     return { ...draft, reminderAt: null, reminderAts: reminderDates(draft), recurringReminder: draft.recurringReminder ?? null };
@@ -37,6 +38,9 @@ function TaskEditor({ params }: { params: TaskParams }) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
   const [draftStatus, setDraftStatus] = useState('');
+  const [showUsagePreview, setShowUsagePreview] = useState(false);
+  const [previewApps, setPreviewApps] = useState<string[]>([]);
+  const [previewInterval, setPreviewInterval] = useState(5);
   const [reminderError, setReminderError] = useState('');
   const dirty = JSON.stringify(input) !== JSON.stringify(fresh) || !!cachedDraft && !conflict;
   const missing = id !== null && !original;
@@ -164,6 +168,39 @@ function TaskEditor({ params }: { params: TaskParams }) {
           </View>
           <Text style={[s.subtitle, { color: c.muted }]}>{!input.dueAt ? '期限を設定すると、10分前などの通知も追加できます。' : '設定済みの通知を残して追加します。期限を変更しても、追加済みの通知日時は変わりません。'}</Text>
           {!!reminderError && <Text accessibilityRole="alert" style={{ color: c.danger }}>{reminderError}</Text>}
+        </Card>
+        <Card>
+          <Text style={[s.label, { color: c.text }]}>アプリの利用時間通知</Text>
+          <Text style={[s.subtitle, { color: c.muted }]}>選んだアプリの今日の利用時間を合計します。10分ごとなら、合計10分・20分・30分…でこのタスクに戻るよう通知します。タスクを完了すると通知が止まります。</Text>
+          {input.usageReminder && <Text style={{ color: c.text }}>{input.usageReminder.count}個のアプリ · {input.usageReminder.interval === 60 ? '1時間' : `${input.usageReminder.interval}分`}ごと</Text>}
+          {appUsage ? <Action secondary disabled={busy} onPress={() => void work(async () => {
+            const choice = await appUsage?.configure(input.usageReminder?.selection ?? '', input.usageReminder?.interval ?? 5);
+            if (choice) change({ usageReminder: choice });
+          })}>対象アプリと通知間隔を選ぶ</Action> : appUsagePreview ? <>
+            <Text style={[s.subtitle, { color: c.muted }]}>シミュレーターではサンプルアプリで設定を試せます。利用時間の計測と通知はiPhone実機で動作します。</Text>
+            <Action secondary disabled={busy} onPress={() => {
+              const saved = input.usageReminder?.selection ?? '';
+              setPreviewApps(saved.startsWith('preview:') ? saved.slice(8).split(',') : []);
+              setPreviewInterval(input.usageReminder?.interval ?? 5);
+              setShowUsagePreview(true);
+            }}>対象アプリと通知間隔を選ぶ</Action>
+            {showUsagePreview && <>
+              {['X', 'Instagram', 'LINE', 'setlog'].map(name => <Action key={name} secondary onPress={() =>
+                setPreviewApps(apps => apps.includes(name) ? apps.filter(app => app !== name) : [...apps, name])
+              }>{previewApps.includes(name) ? '✓ ' : ''}{name}</Action>)}
+              <Text style={[s.label, { color: c.text }]}>通知間隔</Text>
+              <View style={[s.row, { flexWrap: 'wrap' }]}>
+                {[5, 10, 15, 30, 60].map(minutes => <Action key={minutes} secondary={previewInterval !== minutes}
+                  onPress={() => setPreviewInterval(minutes)}>{minutes === 60 ? '1時間' : `${minutes}分`}</Action>)}
+              </View>
+              <Action disabled={!previewApps.length} onPress={() => {
+                change({ usageReminder: { selection: 'preview:' + previewApps.join(','), count: previewApps.length, interval: previewInterval } });
+                setShowUsagePreview(false);
+              }}>選択を適用</Action>
+              <Action secondary onPress={() => setShowUsagePreview(false)}>キャンセル</Action>
+            </>}
+          </> : <Text style={[s.subtitle, { color: c.muted }]}>iOS 17.4以降のiPhone実機で設定できます。</Text>}
+          {input.usageReminder && <Action secondary disabled={busy} onPress={() => change({ usageReminder: null })}>利用時間通知をオフにする</Action>}
         </Card>
         <Card>
           <View style={s.row}><Text style={[s.label, { color: c.text, flex: 1 }]}>繰り返し通知</Text>

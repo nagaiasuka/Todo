@@ -1,3 +1,4 @@
+import { appUsage } from '../notifications/appUsage';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from 'react';
 import { AppState } from 'react-native';
@@ -28,7 +29,8 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const [widgetError, setWidgetError] = useState(false);
   const [reminderError, setReminderError] = useState<string | null>(null);
   const refreshReminders = useCallback((value: Document) => {
-    void syncReminders(value.tasks).then(() => setReminderError(null), error =>
+    void Promise.all([syncReminders(value.tasks), appUsage?.sync(JSON.stringify(value.tasks.flatMap(task =>
+      !task.completedAt && task.usageReminder && !task.usageReminder.selection.startsWith('preview:') ? [{ id: task.id, title: task.title, ...task.usageReminder }] : [])))]).then(() => setReminderError(null), error =>
       setReminderError(error instanceof Error ? error.message : '通知の予約を更新できませんでした。'));
   }, []);
   const [pending, setPending] = useState(0);
@@ -109,6 +111,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         const normalized: TaskInput = {
           title: input.title.trim(), note: input.note.trim(),
           urgent: input.urgent, important: input.important, dueAt: input.dueAt, reminderAt: null, reminderAts,
+          usageReminder: input.usageReminder ?? null,
           recurringReminder: input.recurringReminder ? { ...input.recurringReminder, weekdays: [...input.recurringReminder.weekdays].sort() } : null,
         };
         if (id && !value.tasks.some(t => t.id === id)) throw new Error('タスクが見つかりません。');

@@ -1,5 +1,7 @@
 import { isThemeColor, type ThemeColor } from './appearance';
 
+export type UsageReminder = { selection: string; interval: number; count: number };
+
 export type RecurringReminder = { hour: number; minute: number; weekdays: number[] };
 
 export type Task = {
@@ -11,6 +13,7 @@ export type Task = {
   reminderAt?: string | null;
   reminderAts?: string[];
   recurringReminder?: RecurringReminder | null;
+  usageReminder?: UsageReminder | null;
   note: string;
   order: number;
   completedAt: string | null;
@@ -19,7 +22,7 @@ export type Task = {
 
 export type ThemeMode = 'light' | 'dark' | 'system';
 export type Settings = { showTodayCount: boolean; showNextTask: boolean; theme?: ThemeMode; themeColor?: ThemeColor };
-export type TaskInput = Pick<Task, 'title' | 'urgent' | 'important' | 'dueAt' | 'reminderAt' | 'reminderAts' | 'recurringReminder' | 'note'>;
+export type TaskInput = Pick<Task, 'title' | 'urgent' | 'important' | 'dueAt' | 'reminderAt' | 'reminderAts' | 'recurringReminder' | 'usageReminder' | 'note'>;
 export type Draft = TaskInput & { taskId: string | null };
 export type Document = { version: 1; tasks: Task[]; settings: Settings; draft: Draft | null; appliedWidgetActions?: string[] };
 export const initialDocument: Document = {
@@ -91,7 +94,10 @@ export function recurringReminderLabel(r: RecurringReminder): string {
 }
 
 function validReminderDates(input: TaskInput): boolean {
-  return (input.recurringReminder == null || validRecurringReminder(input.recurringReminder)) &&
+  const usage = input.usageReminder;
+  return (usage == null || typeof usage.selection === 'string' && usage.selection.length > 0 &&
+    [5, 10, 15, 30, 60].includes(usage.interval) && Number.isInteger(usage.count) && usage.count > 0) &&
+    (input.recurringReminder == null || validRecurringReminder(input.recurringReminder)) &&
     (input.reminderAt == null || typeof input.reminderAt === 'string' && Number.isFinite(Date.parse(input.reminderAt))) &&
     (input.reminderAts === undefined || Array.isArray(input.reminderAts) &&
       input.reminderAts.every(at => typeof at === 'string' && Number.isFinite(Date.parse(at))));

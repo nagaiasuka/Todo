@@ -23,6 +23,7 @@
     },
     "plugins": [
       "./plugins/with-adaptive-todo-widget",
+      "./plugins/with-app-usage",
       "expo-router",
       [
         "expo-build-properties",
@@ -86,6 +87,14 @@
           "experimental": {
             "ios": {
               "appExtensions": [
+                {
+                  "targetName": "TodoAppUsageMonitor",
+                  "bundleIdentifier": "com.nagaiasuka.todo.usage-monitor",
+                  "entitlements": {
+                    "com.apple.developer.family-controls": true,
+                    "com.apple.security.application-groups": ["group.com.nagaiasuka.todo"]
+                  }
+                },
                 {
                   "targetName": "ExpoWidgetsTarget",
                   "bundleIdentifier": "com.nagaiasuka.todo.widgets",

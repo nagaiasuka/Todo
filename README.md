@@ -18,6 +18,12 @@ npm run ios
 
 画面・保存操作のWebプレビューは `npm run web` で開けます。WebにはiOSウィジェットはありません。
 
+## アプリの利用時間通知
+
+iOS 17.4以降のiPhoneで、タスク編集の「アプリの利用時間通知」から複数の対象アプリを選べます。スクリーンタイムと通知を許可すると、選んだアプリのその日の合計利用時間に応じて、5分・10分・15分・30分・1時間から選んだ間隔で通知します。タスクを完了すると、そのタスクの通知は止まります。iOSは一部のアプリについて関連サイトの利用時間も含めます。
+
+動作確認には実機を使用します。TestFlightやApp Storeへの配布には、Todo本体と `com.nagaiasuka.todo.usage-monitor` の両方に [Family Controlsの配布権限](https://developer.apple.com/documentation/familycontrols/requesting-the-family-controls-entitlement) が必要です。
+
 ## 実装内容
 
 - ひとつの未完了一覧を「緊急かつ重要」「重要だが緊急ではない」「緊急だが重要ではない」「緊急でも重要でもない」の見出しと細い区切り線で分類。空の分類も見出し・件数・追加ボタンだけで表示。
