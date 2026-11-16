@@ -85,7 +85,7 @@ private enum UsageMonitoring {
     }
     let data = try JSONEncoder().encode(chosen.selection)
     return ["selection": data.base64EncodedString(), "interval": chosen.interval,
-            "count": chosen.selection.applicationTokens.count]
+            "count": chosen.selection.usageTargetCount]
   }
 
   @available(iOS 17.4, *)
@@ -114,17 +114,24 @@ private enum UsageMonitoring {
       guard intervals.contains(rule.interval), let data = Data(base64Encoded: rule.selection) else {
         throw UsageError("利用時間通知の設定を読み込めませんでした。")
       }
-      let tokens = try JSONDecoder().decode(FamilyActivitySelection.self, from: data).applicationTokens
-      guard !tokens.isEmpty else { continue }
+      let selection = try JSONDecoder().decode(FamilyActivitySelection.self, from: data)
+      guard selection.usageTargetCount > 0 else { continue }
       let events = Dictionary(uniqueKeysWithValues: stride(from: rule.interval, through: 1500, by: rule.interval).map { minutes in
         (DeviceActivityEvent.Name("usage-\(minutes)"), DeviceActivityEvent(
-          applications: tokens, threshold: DateComponents(hour: minutes / 60, minute: minutes % 60),
+          applications: selection.applicationTokens, categories: selection.categoryTokens,
+          webDomains: selection.webDomainTokens, threshold: DateComponents(hour: minutes / 60, minute: minutes % 60),
           includesPastActivity: true
         ))
       })
       try center.startMonitoring(name, during: schedule, events: events)
     }
     UserDefaults.standard.set(Data(json.utf8), forKey: "todo.usage.rules")
+  }
+}
+
+private extension FamilyActivitySelection {
+  var usageTargetCount: Int {
+    applicationTokens.count + categoryTokens.count + webDomainTokens.count
   }
 }
 
@@ -142,6 +149,9 @@ private struct UsagePicker: View {
           }
         }
         .padding(.horizontal)
+        Text("アプリやカテゴリを複数選べます。カテゴリを選ぶと、そのカテゴリ全体が対象になります。")
+          .font(.footnote)
+          .padding(.horizontal)
         FamilyActivityPicker(selection: $selection)
       }
         .navigationTitle("対象アプリ")
@@ -150,7 +160,7 @@ private struct UsagePicker: View {
           ToolbarItem(placement: .cancellationAction) { Button("キャンセル") { finish(nil) } }
           ToolbarItem(placement: .confirmationAction) {
             Button("保存") { finish((selection, interval)) }
-              .disabled(selection.applicationTokens.isEmpty)
+              .disabled(selection.usageTargetCount == 0)
           }
         }
     }

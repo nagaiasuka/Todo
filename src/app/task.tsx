@@ -172,7 +172,7 @@ function TaskEditor({ params }: { params: TaskParams }) {
         <Card>
           <Text style={[s.label, { color: c.text }]}>アプリの利用時間通知</Text>
           <Text style={[s.subtitle, { color: c.muted }]}>選んだアプリの今日の利用時間を合計します。10分ごとなら、合計10分・20分・30分…でこのタスクに戻るよう通知します。タスクを完了すると通知が止まります。</Text>
-          {input.usageReminder && <Text style={{ color: c.text }}>{input.usageReminder.count}個のアプリ · {input.usageReminder.interval === 60 ? '1時間' : `${input.usageReminder.interval}分`}ごと</Text>}
+          {input.usageReminder && <Text style={{ color: c.text }}>{input.usageReminder.count}件の対象 · {input.usageReminder.interval === 60 ? '1時間' : `${input.usageReminder.interval}分`}ごと</Text>}
           {appUsage ? <Action secondary disabled={busy} onPress={() => void work(async () => {
             const choice = await appUsage?.configure(input.usageReminder?.selection ?? '', input.usageReminder?.interval ?? 5);
             if (choice) change({ usageReminder: choice });
